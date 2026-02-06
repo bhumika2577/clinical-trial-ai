@@ -1,5 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
+from pydantic import BaseModel
+from typing import List
 
 from app.db.session import SessionLocal
 from app.models.patient import Patient
@@ -7,6 +9,7 @@ from app.models.patient import Patient
 router = APIRouter()
 
 
+# ---------- DB dependency ----------
 def get_db():
     db = SessionLocal()
     try:
@@ -14,12 +17,41 @@ def get_db():
     finally:
         db.close()
 
-@router.post("/upload")
-def upload_patient(patient: dict, db: Session = Depends(get_db)):
+
+# ---------- Schema ----------
+class PatientCreate(BaseModel):
+    age: int
+    egfr: float
+    conditions: List[str]
+
+
+# ---------- Routes ----------
+# @router.post("/")
+# def create_patient(patient: PatientCreate, db: Session = Depends(get_db)):
+#     new_patient = Patient(
+#         age=patient.age,
+#         eGFR=patient.egfr,
+#         conditions=", ".join(patient.conditions)
+#     )
+
+#     db.add(new_patient)
+#     db.commit()
+#     db.refresh(new_patient)
+
+#     return {
+#         "message": "Patient saved to database",
+#         "patient_id": new_patient.id
+#     }
+
+
+@router.post("/")
+def create_patient(patient: PatientCreate, db: Session = Depends(get_db)):
+    print("🔥 CREATE PATIENT CALLED:", patient)
+
     new_patient = Patient(
-        age=patient["age"],
-        eGFR=float(patient["eGFR"]),
-        conditions=", ".join(patient.get("conditions", []))
+        age=patient.age,
+        eGFR=patient.egfr,
+        conditions=", ".join(patient.conditions)
     )
 
     db.add(new_patient)
@@ -30,3 +62,8 @@ def upload_patient(patient: dict, db: Session = Depends(get_db)):
         "message": "Patient saved to database",
         "patient_id": new_patient.id
     }
+
+
+@router.get("/")
+def get_patients(db: Session = Depends(get_db)):
+    return db.query(Patient).all()
