@@ -4,10 +4,7 @@ export const createPatient = (data) => {
   return api.post("/patient/", {
     age: Number(data.age),
     egfr: Number(data.egfr),
-    conditions: data.conditions
-      .split(",")
-      .map(c => c.trim())
-      .filter(Boolean),
+    conditions: data.conditions, // already an array
   });
 };
 

@@ -9,8 +9,7 @@ app = FastAPI(title="Clinical Trial Eligibility Engine")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:3000",          # local React
-        "https://clinical-trial-ai-frontend.vercel.app",  # future Vercel
+        "http://localhost:3000",
     ],
     allow_credentials=True,
     allow_methods=["*"],

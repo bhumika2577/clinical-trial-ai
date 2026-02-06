@@ -3,7 +3,7 @@ import { createPatient } from "../api/patient";
 
 function PatientForm({ onPatientCreated }) {
   const [age, setAge] = useState("");
-  const [eGFR, setEGFR] = useState("");
+  const [egfr, setEgfr] = useState("");
   const [conditions, setConditions] = useState("");
 
   const handleSubmit = async (e) => {
@@ -11,7 +11,7 @@ function PatientForm({ onPatientCreated }) {
 
     const payload = {
       age: Number(age),
-      eGFR: Number(eGFR),
+      egfr: Number(egfr), // ✅ MUST be `egfr` (lowercase) to match backend schema
       conditions: conditions
         .split(",")
         .map((c) => c.trim())
@@ -21,9 +21,17 @@ function PatientForm({ onPatientCreated }) {
     try {
       const res = await createPatient(payload);
       alert("Patient created successfully");
-      onPatientCreated(res.data);
+
+      if (onPatientCreated) {
+        onPatientCreated(res.data);
+      }
+
+      // optional: reset form
+      setAge("");
+      setEgfr("");
+      setConditions("");
     } catch (err) {
-      console.error(err);
+      console.error("Create patient failed:", err);
       alert("Failed to create patient");
     }
   };
@@ -43,8 +51,8 @@ function PatientForm({ onPatientCreated }) {
       <input
         type="number"
         placeholder="eGFR"
-        value={eGFR}
-        onChange={(e) => setEGFR(e.target.value)}
+        value={egfr}
+        onChange={(e) => setEgfr(e.target.value)}
         required
       />
 
