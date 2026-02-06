@@ -1,58 +1,62 @@
-import React, { useState } from "react";
-import axios from "axios";
+import { useState } from "react";
+import { createPatient } from "../api/patient";
 
-function PatientForm() {
+function PatientForm({ onPatientCreated }) {
   const [age, setAge] = useState("");
-  const [egfr, setEgfr] = useState("");
-  const [message, setMessage] = useState("");
+  const [eGFR, setEGFR] = useState("");
+  const [conditions, setConditions] = useState("");
 
-  const submitPatient = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const payload = {
+      age: Number(age),
+      eGFR: Number(eGFR),
+      conditions: conditions
+        .split(",")
+        .map((c) => c.trim())
+        .filter(Boolean),
+    };
+
     try {
-      const res = await axios.post(
-        "http://127.0.0.1:8000/patient/upload",
-        {
-          age: Number(age),
-          eGFR: Number(egfr),
-          conditions: ["Type 2 Diabetes"]
-        }
-      );
-
-      setMessage(`Patient saved with ID: ${res.data.patient_id}`);
-      localStorage.setItem("patient_id", res.data.patient_id);
+      const res = await createPatient(payload);
+      alert("Patient created successfully");
+      onPatientCreated(res.data);
     } catch (err) {
-      setMessage("Error saving patient");
+      console.error(err);
+      alert("Failed to create patient");
     }
   };
 
   return (
-    <div className="bg-white p-6 rounded shadow">
-      <h2 className="text-xl font-semibold mb-4">Patient Details</h2>
+    <form onSubmit={handleSubmit}>
+      <h2>Create Patient</h2>
 
       <input
         type="number"
         placeholder="Age"
-        className="border p-2 w-full mb-3"
         value={age}
         onChange={(e) => setAge(e.target.value)}
+        required
       />
 
       <input
         type="number"
         placeholder="eGFR"
-        className="border p-2 w-full mb-3"
-        value={egfr}
-        onChange={(e) => setEgfr(e.target.value)}
+        value={eGFR}
+        onChange={(e) => setEGFR(e.target.value)}
+        required
       />
 
-      <button
-        onClick={submitPatient}
-        className="bg-blue-600 text-white px-4 py-2 rounded"
-      >
-        Save Patient
-      </button>
+      <input
+        type="text"
+        placeholder="Conditions (comma separated)"
+        value={conditions}
+        onChange={(e) => setConditions(e.target.value)}
+      />
 
-      {message && <p className="mt-3 text-sm">{message}</p>}
-    </div>
+      <button type="submit">Save Patient</button>
+    </form>
   );
 }
 
