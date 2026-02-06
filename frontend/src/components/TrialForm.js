@@ -1,25 +1,26 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { uploadTrialPDF } from "../api/trial";
 
 function TrialForm() {
   const [file, setFile] = useState(null);
   const [message, setMessage] = useState("");
 
-  const uploadTrial = async () => {
-    if (!file) return;
-
-    const formData = new FormData();
-    formData.append("file", file);
+  const handleUpload = async () => {
+    if (!file) {
+      setMessage("Please select a file");
+      return;
+    }
 
     try {
-      await axios.post(
-        "http://127.0.0.1:8000/trial/upload",
-        formData
-      );
+      const res = await uploadTrialPDF(file);
 
       setMessage("Trial uploaded successfully");
-      localStorage.setItem("trial_id", 1);
+
+      if (res.data?.trial_id) {
+        localStorage.setItem("trial_id", res.data.trial_id);
+      }
     } catch (err) {
+      console.error("Trial upload failed:", err);
       setMessage("Error uploading trial");
     }
   };
@@ -35,7 +36,7 @@ function TrialForm() {
       />
 
       <button
-        onClick={uploadTrial}
+        onClick={handleUpload}
         className="bg-green-600 text-white px-4 py-2 rounded"
       >
         Upload Trial
