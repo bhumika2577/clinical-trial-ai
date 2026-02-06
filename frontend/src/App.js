@@ -1,18 +1,14 @@
-import { useState } from "react";
 import PatientForm from "./components/PatientForm";
+import EligibilityCheck from "./components/EligibilityCheck";
 
 function App() {
-  const [patient, setPatient] = useState(null);
-
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>Clinical Trial Eligibility</h1>
+    <div style={{ padding: "30px" }}>
+      <h1>Clinical Trial Eligibility System</h1>
 
-      {!patient ? (
-        <PatientForm onPatientCreated={setPatient} />
-      ) : (
-        <pre>{JSON.stringify(patient, null, 2)}</pre>
-      )}
+      <PatientForm onPatientCreated={() => {}} />
+
+      <EligibilityCheck />
     </div>
   );
 }
