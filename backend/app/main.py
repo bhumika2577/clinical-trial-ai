@@ -8,12 +8,13 @@ from app.api import auth, patient, trial, eligibility
 
 app = FastAPI(title="Clinical Trial Eligibility Engine")
 
-# ---------------- CORS ----------------
+# ---------------- CORS (FINAL FIX) ----------------
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
-        "https://clinical-trial-ai-frontend.vercel.app",  # optional
+        "https://clinical-trial-ai.vercel.app",
+        "https://clinical-trial-ai-frontend.vercel.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
