@@ -1,10 +1,7 @@
----
-
 #  AI-Driven Clinical Trial Eligibility System
 
 **(Protocol-Based, Explainable, Extensible Architecture)**
 
----
 
 ## 1. Problem Statement
 
