@@ -1,14 +1,22 @@
 import PatientForm from "./components/PatientForm";
-import EligibilityCheck from "./components/EligibilityCheck";
+import TrialForm from "./components/TrialForm";
+import EligibilityResult from "./components/EligibilityResult";
 
 function App() {
   return (
-    <div style={{ padding: "30px" }}>
-      <h1>Clinical Trial Eligibility System</h1>
+    <div className="max-w-4xl mx-auto p-6 space-y-8">
+      <h1 className="text-2xl font-bold">
+        Clinical Trial Eligibility System
+      </h1>
 
-      <PatientForm onPatientCreated={() => {}} />
+      
+      <PatientForm />
 
-      <EligibilityCheck />
+      
+      <TrialForm />
+
+      
+      <EligibilityResult />
     </div>
   );
 }
